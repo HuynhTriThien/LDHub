@@ -94,7 +94,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     if input.KeyCode == Enum.KeyCode.LeftShift then
         print("Shift trái được nhấn!")
-        -- code bật menu
+        -- OrionLib:ToggleUI(
     end
 end)
 
