@@ -4,15 +4,43 @@
 
 local OrionLib = nil
 
--- 🪶 Load Orion Library (UI)
-pcall(function()
-    OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
-end)
+-- 🪶 Robust load Orion Library (UI) with retries + diagnostic
+local OrionLib
+local ORION_URL = "https://raw.githubusercontent.com/shlexware/Orion/main/source"
+local MAX_ATTEMPTS = 5
+
+for attempt = 1, MAX_ATTEMPTS do
+    local ok, result_or_err = pcall(function()
+        -- second parameter true để HttpGet bypass cache khi exploit hỗ trợ
+        return loadstring(game:HttpGet(ORION_URL, true))()
+    end)
+
+    if ok and result_or_err then
+        OrionLib = result_or_err
+        print("✅ OrionLib loaded (attempt " .. attempt .. ")")
+        break
+    else
+        warn("⚠️ OrionLib load failed (attempt " .. attempt .. "): " .. tostring(result_or_err))
+        -- backoff nhỏ trước khi thử lại
+        wait(math.min(1 * attempt, 5))
+    end
+end
 
 if not OrionLib then
-    warn("⚠️ OrionLib failed to load — check internet or library URL")
+    warn("⛔ OrionLib failed to load after " .. MAX_ATTEMPTS .. " attempts. Check internet, library URL, or exploit HttpGet permissions.")
+    -- Option: tiếp tục chạy phần script non-GUI hoặc dừng hẳn
     return
 end
+
+-- bây giờ an toàn để tạo GUI
+local Window = OrionLib:MakeWindow({
+    Name = "LD Hub (Premium)",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "LDHub_Config"
+})
+-- ... phần còn lại của script ...
+OrionLib:Init()
 
 -- 🌙 Create Window (UI)
 local Window = OrionLib:MakeWindow({
