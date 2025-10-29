@@ -61,13 +61,20 @@ CreditsTab:AddParagraph("Credits", "Script by HuynhTriThien x Volcano\nUI: Orion
 
 -- 🌀 Toggle UI with LeftShift
 local UserInputService = game:GetService("UserInputService")
-UserInputService.InputBegan:Connect(function(input, gpe)
-    if not gpe and input.KeyCode == Enum.KeyCode.LeftShift then
-        OrionLib:Destroy()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/HuynhTriThien/LDHub/main/loader.luau"))()
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.LeftShift then
+        print("Shift trái được nhấn!")
+        -- code bật menu
     end
 end)
 
 -- 🟢 Init
 OrionLib:Init()
-print("✅ LD Hub UI Loaded Successfully")
+print("✅ SCRIPT CHẠY RỒI ĐÓ EM YÊU")
+
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
